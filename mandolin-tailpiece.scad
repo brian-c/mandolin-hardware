@@ -1,23 +1,24 @@
-$fn = 25;
+$fn = 50;
 
-plate_height = 6;
-plate_thickness = 2;
-plate_radius = 50;
+plate_height = 13;
+plate_thickness = 3;
+plate_radius = 90;
 
 screw_hole_radius = 1.3;
 
+// This should be about 32 total.
 courses = 4;
 course_spacing = 6;
 strings = 2;
-string_spacing = 2;
+string_spacing = 3;
 
-peg_length = 2;
-peg_radius = 0.7;
+peg_length = 3;
+peg_radius = 1;
 
-nut_height = 5;
-nut_radius = 1;
+nut_height = 13;
+nut_radius = 2;
 
-function to_deg(distance) = ((distance / plate_radius) * 180) / 3.1415;
+function to_deg(distance) = ((distance / plate_radius) * 180) / PI;
 function space_out(index, total, spacing) = to_deg(spacing * (index - ((total + 1) / 2)));
 function course_angle(index) = space_out(index, courses, course_spacing);
 function string_angle(course, index) = course_angle(course) + space_out(index, strings, string_spacing);
