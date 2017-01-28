@@ -1,16 +1,16 @@
 $fn = 96;
 
-curve_r = 80;
-bar_r = 4.5;
-leg_d = 12;
+curve_r = 40;
+bar_r = 6;
+leg_d = 18;
 clearance = 2;
 side_space = 2;
-bevel = 0.75;
+bevel = 1;
 
 strings = 8;
-pin_d = 2.5;
-pin_h = 2.25;
-pin_gap = 2;
+pin_d = 3;
+pin_h = 2;
+pin_gap = 1.75;
 
 screw_hole_d = 3.5;
 screw_head_d = 8;
@@ -25,9 +25,14 @@ screws_arc = pin_arc+leg_d+side_space*2;
 screws_r = curve_r+leg_d/2-bar_r;
 screws_angle = screws_arc/screws_r*180/PI;
 
-/*%cube(size=[40, 40, 40], center=true);*/
+%square(size=[72, 18], center=true); // Pickup
 
-color("silver")
+%difference() {
+  square(size=[54, 40], center=true); // Existing Screw spread
+  square(size=[40, 41], center=true); // String spread
+}
+
+color("gold")
 translate([0, curve_r, leg_h]) difference() {
   union() {
     // Main bar
@@ -54,7 +59,7 @@ translate([0, curve_r, leg_h]) difference() {
           translate([x, y, 0]) rotate([90, 0, angle*-1]) cylinder(d=pin_d, h=bar_r+pin_h);
         }
         d_at_pin_ends = (curve_r+bar_r+pin_h)*2;
-        translate([0, 0, pin_d/4]) resize([d_at_pin_ends, d_at_pin_ends, pin_d*4]) sphere(d=1, $fn=$fn*2);
+        translate([0, 0, pin_d/4]) resize([d_at_pin_ends, d_at_pin_ends, pin_d*5]) sphere(d=1, $fn=$fn*2);
       }
     }
 
@@ -62,12 +67,12 @@ translate([0, curve_r, leg_h]) difference() {
     for (i=[-1:2:1]) {
       x = sin(180-screws_angle/2*i)*screws_r;
       y = cos(180-screws_angle/2*i)*screws_r;
-      translate([x, y, leg_h/-2]) {
-        intersection() {
-          translate([0, 0, leg_d/4]) sphere(d=leg_d);
-          cube(size=[leg_d, leg_d, leg_h], center=true);
-        }
-        cylinder(d1=leg_d/1.5, d2=leg_d/3, h=leg_h, center=true);
+      translate([x, y, 0]) {
+          intersection() {
+            resize([leg_d, leg_d, leg_h*2]) sphere(d=leg_d);
+            translate([0, 0, leg_h/-2]) cube(size=[leg_d, leg_d, leg_h], center=true);
+          }
+        translate([0, 0, leg_h/-1]) cylinder(d1=bar_r*2, d2=bar_r/2, h=leg_h);
       }
     }
   }
@@ -81,8 +86,6 @@ translate([0, curve_r, leg_h]) difference() {
     translate([x, y, 0]) rotate([0, 45, angle*-1]) cube(size=[bevel, bar_r*2+0.01, bevel], center=true);
   }
 
-
-
   // Screw holes
   for (i=[-1:2:1]) {
     x = sin(180-screws_angle/2*i)*screws_r;
@@ -93,6 +96,8 @@ translate([0, curve_r, leg_h]) difference() {
 
       // Leg bevels
       rotate_extrude() translate([leg_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
+      rotate_extrude() translate([leg_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
+      rotate_extrude() translate([screw_head_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
     }
   }
 
