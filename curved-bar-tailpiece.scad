@@ -1,18 +1,18 @@
 $fn = 96;
 
-curve_r = 40;
+curve_r = 45;
 bar_r = 6;
 leg_d = 18;
 clearance = 2;
-side_space = 2;
-bevel = 1;
+side_space = 1.5;
+bevel = 1.2;
 
 strings = 8;
-pin_d = 3;
-pin_h = 2;
-pin_gap = 1.75;
+pin_d = 3.2;
+pin_h = 2.4;
+pin_gap = 1.6;
 
-screw_hole_d = 3.5;
+screw_hole_d = 4;
 screw_head_d = 8;
 screw_head_h = 2.5;
 
@@ -29,7 +29,7 @@ screws_angle = screws_arc/screws_r*180/PI;
 
 %difference() {
   square(size=[54, 40], center=true); // Existing Screw spread
-  square(size=[40, 41], center=true); // String spread
+  square(size=[35, 41], center=true); // String spread
 }
 
 color("gold")
@@ -68,10 +68,10 @@ translate([0, curve_r, leg_h]) difference() {
       x = sin(180-screws_angle/2*i)*screws_r;
       y = cos(180-screws_angle/2*i)*screws_r;
       translate([x, y, 0]) {
-          intersection() {
-            resize([leg_d, leg_d, leg_h*2]) sphere(d=leg_d);
-            translate([0, 0, leg_h/-2]) cube(size=[leg_d, leg_d, leg_h], center=true);
-          }
+        intersection() {
+          resize([leg_d, leg_d, leg_h*2]) sphere(d=leg_d);
+          translate([0, 0, leg_h/-2]) cube(size=[leg_d, leg_d, leg_h], center=true);
+        }
         translate([0, 0, leg_h/-1]) cylinder(d1=bar_r*2, d2=bar_r/2, h=leg_h);
       }
     }
@@ -96,8 +96,8 @@ translate([0, curve_r, leg_h]) difference() {
 
       // Leg bevels
       rotate_extrude() translate([leg_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
-      rotate_extrude() translate([leg_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
       rotate_extrude() translate([screw_head_d/2, 0, 0]) rotate(45) square(size=[bevel, bevel], center=true);
+
     }
   }
 
