@@ -3,7 +3,7 @@ use <curvy_block.scad>;
 module bridge(
   saddle_w = 44/3*4,
   saddle_t = 6.4,
-  base_t = 1.5,
+  base_t = 1.6,
   post_h = 10.3,
   post_d = 6,
   post_rim_h = 1.5,
@@ -55,3 +55,5 @@ module bridge(
     }
   }
 }
+
+bridge();

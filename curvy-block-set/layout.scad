@@ -4,12 +4,10 @@ use <bridge.scad>;
 use <tailpiece.scad>;
 use <tuner_button.scad>;
 
-support_d = 1+1/5;
-
 module support(
   start=[0, 0],
   end=[0, 0],
-  d = 1+1/5,
+  d = 1+2/3,
 ) {
   translate([0, 0, d/2]) {
     hull() {

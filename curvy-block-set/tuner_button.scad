@@ -44,3 +44,5 @@ module tuner_button(
     }
   }
 }
+
+tuner_button();
