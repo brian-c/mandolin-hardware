@@ -3,25 +3,24 @@ $fn = 32;
 function inches(mm) = 25.4*mm;
 
 module pickup_cover(
-  shell_t = inches(1/16),
-  shell_r = inches(1/32),
-  plate_h = inches(1+9/16),
-  inner_plate_w = inches(2+1/16),
+  shell_t = 1.5, // Minimum
+  shell_r = 0.5, // Along the top
+  plate_h = 38,
+  inner_plate_w = 52,
   inner_corner_d = inches(1/8),
-  coil_w = inches(2+7/8),
-  coil_d = inches(11/16),
-  coil_h = inches(11/16),
-  screw_d = inches(0.138),
+  coil_w = 72,
+  coil_d = inches(3/4), // Actually ~20, but this is easier to drill.
+  coil_h = 16,
+  // #6 screws:
+  screw_d = inches(0.138)+0.5,
   screw_head_d = inches(0.262),
   screw_head_h = inches(0.083),
   screw_coords = [ // From center
-    [inches(0), inches(-19/32)],
-    [inches((1+13/16)/-2), inches(19/32)],
-    [inches((1+13/16)/2), inches(19/32)],
+    [0, 12.3/-2-6.68-3.61/2],
+    [(39.78+3.61)/-2, 12.3/2+7.51+3.61/2],
+    [(39.78+3.61)/2, 12.3/2+7.51+3.61/2],
   ],
 ) {
-  /* screw_head_h = screw_head_d/((180-82)/45); */
-
   module plate() {
     hull() {
       for (i=[-1, 1]) {
@@ -30,7 +29,7 @@ module pickup_cover(
         }
 
         for (j=[-1, 1]) {
-          translate([inner_plate_w/2*i, (plate_h-inner_corner_d)/2*j]) {
+          translate([(inner_plate_w-inner_corner_d/2)/2*i, (plate_h-inner_corner_d)/2*j]) {
             circle(d=inner_corner_d);
           }
         }
@@ -46,6 +45,7 @@ module pickup_cover(
         }
         sphere(r=shell_r);
       }
+
       translate([0, 0, (shell_r+0.01)/-2]) {
         cube(size=[coil_w+shell_r*2+0.02, plate_h+shell_r*2+0.02, shell_r+0.01], center=true);
       }
@@ -69,15 +69,15 @@ module pickup_cover(
 
   module bracing() {
     for (screw_coord=screw_coords) {
-      turn = screw_coord[0] < 0 ? 30 : screw_coord[0] > 0 ? -30 : 0;
+      turn = 0; // screw_coord[0] < 0 ? 10 : screw_coord[0] > 0 ? -10 : 0;
       up_or_down = screw_coord[1] > 0 ? 1 : -1;
 
       translate(screw_coord) {
-        rotate(turn) hull () {
+        rotate(turn) hull() {
           cylinder(d1=screw_d+shell_t*2, d2=screw_head_d+shell_t*2, h=coil_h+shell_t);
 
           translate([0, screw_head_d*up_or_down, 0]) {
-            cylinder(d1=(screw_d+shell_t)*2, d2=(screw_head_d+shell_t)*2, h=coil_h+shell_t);
+            cylinder(d1=screw_d+shell_t*2, d2=screw_head_d+shell_t*2, h=coil_h+shell_t);
           }
         }
       }
@@ -91,7 +91,7 @@ module pickup_cover(
           cylinder(d=screw_d, h=coil_h+shell_t+0.02);
 
           translate([0, 0, coil_h+shell_t-screw_head_h+0.02]) {
-            cylinder(d1=0, d2=screw_head_d, h=screw_head_h);
+            cylinder(d1=screw_d, d2=screw_head_d, h=screw_head_h);
           }
         }
       }
@@ -110,6 +110,7 @@ module pickup_cover(
     }
 
     screw_h = coil_h+shell_t+inches(1/2);
+    echo(str("<b>Screws are about ", floor(screw_h), "mm long.</b>"));
     translate([0, 0, screw_h/2-inches(1/2)]) {
       for (screw_coord=screw_coords) {
         translate(screw_coord) {
@@ -120,7 +121,7 @@ module pickup_cover(
   }
 
   intersection() {
-    resize([coil_w+shell_t*2, plate_h, coil_h+shell_t]) {
+    resize([coil_w+shell_t*2, plate_h+shell_t*2, coil_h+shell_t]) {
       outer_solid();
     }
 

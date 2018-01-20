@@ -1,14 +1,18 @@
 use <curvy_block.scad>;
 
+slip = 0.15;
+
 module tuner_button(
-  width = 10,
-  height = 14,
-  wing_t = 2.5,
+  width = 9,
+  height = 12,
+  wing_t = 3,
   center_d = 7,
-  shaft = 3.6,
-  flat = 2.9,
-  screw_head_d = 4.2,
-  screw_head_h = 1.7,
+  shaft_h = 5.5+1,
+  shaft_d = 3.9+slip,
+  shaft_flat = 3.55+slip,
+  screw_d = 2.42,
+  screw_head_d = 4.66,
+  screw_head_h = 1.18,
 ) {
   translate([0, 0, height/2]) {
     rotate([90, 0, 0]) {
@@ -27,17 +31,20 @@ module tuner_button(
           }
         }
 
-        intersection() {
-          rotate([90]) {
-            cylinder(d=shaft, h=height+0.02, center=true);
-          }
-
-          cube(size=[shaft+0.02, height+0.02, flat], center=true);
-        }
-
         translate([0, (height-screw_head_h)/2+0.01, 0]) {
           rotate([90]) {
-            cylinder(d1=screw_head_d, d2=0, h=screw_head_h, center=true);
+            cylinder(d=screw_d, h=height+0.02, center=true);
+            cylinder(d1=screw_head_d, d2=screw_d, h=screw_head_h, center=true);
+          }
+        }
+
+        translate([0, (height-shaft_h)/-2, 0]) {
+          intersection() {
+            rotate([90]) {
+              cylinder(d=shaft_d, h=shaft_h+0.02, center=true);
+            }
+
+            cube(size=[shaft_d+0.02, shaft_h+0.01, shaft_flat], center=true);
           }
         }
       }

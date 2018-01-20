@@ -1,4 +1,4 @@
-$fn = 32;
+$fn = 64;
 
 use <bridge.scad>;
 use <tailpiece.scad>;
@@ -31,7 +31,7 @@ translate([0, -14, 2+3.3+2]) {
 
 translate([0, 18, 0]) {
   for (x=[-7/2:7/2]) {
-    flip = x < 0 ? -1 : 1;
+    flip = -1; // For CW/CCW, depending on the side: x < 0 ? -1 : 1;
 
     translate([x*11, 0, 0]) {
       support(start=[2*flip, -2], end=[2*flip, -12]);

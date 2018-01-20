@@ -8,13 +8,13 @@ module tailpiece(
   pin_d = 3.3,
   pin_spacing = 2.4,
   // #6 wood screw:
-  screw_d = 4,
-  screw_head_d = 7.1,
+  screw_d = 3.5052+0.5,
+  screw_head_d = 6.6548,
+  screw_head_h = 2.1082,
 ) {
   tailpiece_w = pins*pin_d+(pins+1)*pin_spacing;
   overall_h = pin_d+clearance*2;
   full_pin_h = (leg_d-pin_h)/2+pin_h-pin_d/4;
-  screw_head_h = screw_head_d/(82/45);
 
   translate([0, 0, overall_h/2]) {
     difference() {
@@ -60,7 +60,7 @@ module tailpiece(
         for (i=[-2, 2]) {
           translate([(tailpiece_w+leg_d)/i, 0, 0]) {
             translate([0, 0, (overall_h-screw_head_h)/2+0.01]) {
-              cylinder(d1=0, d2=screw_head_d, h=screw_head_h, center=true);
+              cylinder(d1=screw_d, d2=screw_head_d, h=screw_head_h, center=true);
             }
 
             cylinder(d=screw_d, h=overall_h+0.02, center=true);
