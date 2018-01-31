@@ -4,14 +4,15 @@ slip = 0.2;
 
 module bridge(
   saddle_w = 44/3*4,
-  saddle_t = 6.4,
-  bottom_t = 1.72,
-  post_h = 8.76+1.72,
-  post_d = 6.1+slip,
+  saddle_t = 6.35 + slip, // 1/4"
+  post_h = 8.84+1.72,
+  post_d = 5.88+slip,
   post_rim_h = 1.72-slip,
-  post_rim_d = 10.1+slip,
-  stud_rim_d = 13.56,
+  post_rim_d = 10+slip,
+  stud_rim_d = 13.62,
 ) {
+  bottom_t = post_rim_h;
+
   translate([0, 0, post_h/2]) {
     difference() {
       union() {

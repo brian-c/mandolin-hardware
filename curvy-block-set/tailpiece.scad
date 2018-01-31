@@ -5,8 +5,8 @@ module tailpiece(
   pins = 8,
   clearance = 2,
   pin_h = 2.4,
-  pin_d = 3.3,
-  pin_spacing = 2.4,
+  pin_d = 3.2,
+  pin_spacing = 2.5,
   // #6 wood screw:
   screw_d = 3.5052+0.5,
   screw_head_d = 6.6548,

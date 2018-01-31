@@ -7,12 +7,12 @@ module tuner_button(
   height = 12,
   wing_t = 3,
   center_d = 7,
-  shaft_h = 5.5+1,
-  shaft_d = 3.9+slip,
-  shaft_flat = 3.55+slip,
-  screw_d = 2.42,
-  screw_head_d = 4.66,
-  screw_head_h = 1.18,
+  shaft_h = 5.4+1,
+  shaft_d = 4+slip,
+  shaft_flat = 3.5+slip,
+  screw_d = 2.5,
+  screw_head_d = 4.4,
+  screw_head_h = 1.33,
 ) {
   translate([0, 0, height/2]) {
     rotate([90, 0, 0]) {
