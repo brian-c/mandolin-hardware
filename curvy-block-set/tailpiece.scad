@@ -1,4 +1,8 @@
+$fn = 16;
+
 use <curvy_block.scad>;
+
+for_projection = true;
 
 module tailpiece(
   leg_d = 11,
@@ -11,18 +15,19 @@ module tailpiece(
   screw_d = 3.5052+0.5,
   screw_head_d = 6.6548,
   screw_head_h = 2.1082,
+  for_projection = for_projection,
 ) {
   tailpiece_w = pins*pin_d+(pins+1)*pin_spacing;
   overall_h = pin_d+clearance*2;
   full_pin_h = (leg_d-pin_h)/2+pin_h-pin_d/4;
 
-  translate([0, 0, overall_h/2]) {
+  translate([0, 0, for_projection ? 0 : overall_h/2]) {
     difference() {
       union() {
         // Half-round bar
         translate([0, 0, pin_d/-2]) {
           difference() {
-            translate([0, 0, pin_d+clearance]) {
+            translate([0, 0, clearance+(for_projection ? 0 : pin_d)]) {
               resize([tailpiece_w+leg_d, leg_d-pin_h, (pin_d+clearance)*2]) {
                 rotate([0, 90]) {
                   cylinder(d=1, h=1, center=true);
@@ -71,4 +76,8 @@ module tailpiece(
   }
 }
 
-tailpiece();
+if (for_projection) {
+  projection(cut=true) tailpiece();
+} else {
+  tailpiece();
+}

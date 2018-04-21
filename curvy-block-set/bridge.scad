@@ -1,4 +1,8 @@
+$fn = 16;
+
 use <curvy_block.scad>;
+
+for_projection = true;
 
 slip = 0.2;
 
@@ -10,10 +14,11 @@ module bridge(
   post_rim_h = 1.72-slip,
   post_rim_d = 10+slip,
   stud_rim_d = 13.62,
+  for_projection = for_projection,
 ) {
   bottom_t = post_rim_h;
 
-  translate([0, 0, post_h/2]) {
+  translate([0, 0, for_projection ? 0 : post_h/2]) {
     difference() {
       union() {
         // Side pieces
@@ -35,10 +40,12 @@ module bridge(
           }
 
           // Scoop
-          translate([0, 0, post_h/2]) {
-            resize([saddle_w+stud_rim_d, stud_rim_d+0.02, post_h*2-bottom_t*4]) {
-              rotate([90]) {
-                cylinder(d=1, h=1, center=true);
+          if (!for_projection) {
+            translate([0, 0, post_h/2]) {
+              resize([saddle_w+stud_rim_d, stud_rim_d+0.02, post_h*2-bottom_t*4]) {
+                rotate([90]) {
+                  cylinder(d=1, h=1, center=true);
+                }
               }
             }
           }
@@ -59,4 +66,8 @@ module bridge(
   }
 }
 
-bridge();
+if (for_projection) {
+  projection(cut=true) bridge();
+} else {
+  bridge();
+}
