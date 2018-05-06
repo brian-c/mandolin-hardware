@@ -1,20 +1,23 @@
-$fn = 16;
+$fn = 40;
 
 use <curvy_block.scad>;
 
-for_projection = true;
+for_projection = false;
+
+shrinkage_correction = 1.05;
 
 module tailpiece(
-  leg_d = 11,
+  leg_d = 13,
+  leg_ratio=1.125,
   pins = 8,
   clearance = 2,
   pin_h = 2.4,
   pin_d = 3.2,
   pin_spacing = 2.5,
   // #6 wood screw:
-  screw_d = 3.5052+0.5,
-  screw_head_d = 6.6548,
-  screw_head_h = 2.1082,
+  screw_d = 3.46*shrinkage_correction+0.5,
+  screw_head_d = 6.8*shrinkage_correction,
+  screw_head_h = 2.66*shrinkage_correction,
   for_projection = for_projection,
 ) {
   tailpiece_w = pins*pin_d+(pins+1)*pin_spacing;
@@ -52,9 +55,9 @@ module tailpiece(
 
         // Legs
         for (i=[-2, 2]) {
-          translate([(tailpiece_w+leg_d*1.25)/i, pin_h/-2, 0]) {
+          translate([(tailpiece_w+leg_d*leg_ratio)/i, pin_h/-2, 0]) {
             rotate(90*i/2) {
-              curvy_block(size=[leg_d, leg_d*1.25, overall_h], r1=leg_d/2, r2=leg_d/2, r3=overall_h*2/3, r4=0);
+              curvy_block(size=[leg_d, leg_d*leg_ratio, overall_h], r1=leg_d/2, r2=leg_d/2, r3=overall_h*2/3, r4=0);
             }
           }
         }

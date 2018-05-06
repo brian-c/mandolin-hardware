@@ -1,4 +1,4 @@
-$fn = 32;
+$fn = 40;
 
 for_projection = false;
 
@@ -14,9 +14,9 @@ module pickup_cover(
   coil_d = inches(3/4), // Actually ~20, but this is easier to drill.
   coil_h = 16,
   // #6 screws:
-  screw_d = inches(0.138)+0.5,
-  screw_head_d = inches(0.262),
-  screw_head_h = inches(0.083),
+  screw_d = 3.46+0.5,
+  screw_head_d = 6.8,
+  screw_head_h = 2.66,
   screw_coords = [ // From center
     [0, 12.3/-2-6.68-3.61/2],
     [(39.78+3.61)/-2, 12.3/2+7.51+3.61/2],
