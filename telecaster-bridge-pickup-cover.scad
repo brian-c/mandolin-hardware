@@ -1,8 +1,22 @@
 $fn = 40;
 
 for_projection = false;
+for_drill_guides = true;
 
 function inches(mm) = 25.4*mm;
+
+module crosshairs(size=[1, 1]) {
+  cube(size=[size[0], 1/4, 1], center=true);
+  cube(size=[1/4, size[1], 1], center=true);
+}
+
+module drill_point(d) {
+  difference() {
+    cylinder(d=d, h=1, center=true);
+    cylinder(d=d-0.5, h=1+0.01, center=true);
+  }
+  crosshairs(size=[d, d]);
+}
 
 module pickup_cover(
   shell_t = 1.5, // Minimum
@@ -23,6 +37,7 @@ module pickup_cover(
     [(39.78+3.61)/2, 12.3/2+7.51+3.61/2],
   ],
   for_projection = for_projection,
+  for_drill_guides = for_drill_guides,
 ) {
   module plate() {
     hull() {
@@ -101,46 +116,75 @@ module pickup_cover(
     }
   }
 
-  translate([0, 0, for_projection ? coil_h*-1+0.02 : 0]) {
-    %union() {
-      plate();
+  if (for_drill_guides) { // Quick'n'dirty
+    crosshairs(size=[coil_w+10, plate_h+10]);
 
-      hull() {
-        for (i=[-1, 1]) {
-          translate([(coil_w-coil_d)/2*i, 0, coil_h/2]) {
-            cylinder(d=coil_d, h=coil_h, center=true);
-          }
+    translate([0, 0, -1/2]) {
+      difference() {
+        resize([coil_w+shell_t*2, plate_h+shell_t*2, 1]) {
+          outer_solid();
         }
-      }
-
-      screw_h = coil_h+shell_t+inches(1/2);
-      echo(str("<b>Screws are about ", floor(screw_h), "mm long.</b>"));
-      translate([0, 0, screw_h/2-inches(1/2)]) {
-        for (screw_coord=screw_coords) {
-          translate(screw_coord) {
-            cylinder(d1=screw_d/2, d2=screw_d, h=screw_h, center=true);
+        translate([0, 0, -0.1]) {
+          resize([coil_w+shell_t*2-1/2, plate_h+shell_t*2-1/2, 1.2]) {
+            outer_solid();
           }
         }
       }
     }
 
-    intersection() {
-      resize([coil_w+shell_t*2, plate_h+shell_t*2, coil_h+shell_t]) {
-        outer_solid();
+    for (i=[-1, 1]) {
+      translate([((coil_w-coil_d)/2+shell_t)*i, 0]) {
+        drill_point(d=coil_d);
       }
 
-      difference() {
-        union() {
-          shell();
-          bracing();
+      for (j=[-1, 1]) {
+        translate([((inner_plate_w-inner_corner_d/2)/2+shell_t/1.5)*i, ((plate_h-inner_corner_d)/2+shell_t)*j]) {
+          drill_point(d=inner_corner_d);
         }
-        screw_holes();
+      }
+    }
+  } else {
+    translate([0, 0, for_projection ? coil_h*-1+0.02 : 0]) {
+      %union() {
+        plate();
+
+        hull() {
+          for (i=[-1, 1]) {
+            translate([(coil_w-coil_d)/2*i, 0, coil_h/2]) {
+              cylinder(d=coil_d, h=coil_h, center=true);
+            }
+          }
+        }
+
+        screw_h = coil_h+shell_t+inches(1/2);
+        echo(str("<b>Screws are about ", floor(screw_h), "mm long.</b>"));
+        translate([0, 0, screw_h/2-inches(1/2)]) {
+          for (screw_coord=screw_coords) {
+            translate(screw_coord) {
+              cylinder(d1=screw_d/2, d2=screw_d, h=screw_h, center=true);
+            }
+          }
+        }
+      }
+
+      intersection() {
+        resize([coil_w+shell_t*2, plate_h+shell_t*2, coil_h+shell_t]) {
+          outer_solid();
+        }
+
+        difference() {
+          union() {
+            shell();
+            bracing();
+          }
+          screw_holes();
+        }
       }
     }
   }
 }
 
-if (for_projection) {
+if (for_projection || for_drill_guides) {
   projection(cut=true) pickup_cover();
 } else {
   pickup_cover();
